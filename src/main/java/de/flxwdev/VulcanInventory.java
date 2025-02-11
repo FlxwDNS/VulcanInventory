@@ -1,6 +1,6 @@
 package de.flxwdev;
 
-import de.flxwdev.inventory.singleton.SingletonInventory;
+import de.flxwdev.inventory.EmptyInventory;
 import de.flxwdev.listener.InventoryClickListener;
 import de.flxwdev.listener.InventoryCloseListener;
 import de.flxwdev.listener.PlayerQuitListener;
@@ -19,9 +19,9 @@ public final class VulcanInventory {
     private VulcanSettings settings;
 
     @Getter
-    private final List<SingletonInventory> inventories = new ArrayList<>();
+    private final List<EmptyInventory> inventories = new ArrayList<>();
 
-    public void addInventory(SingletonInventory inventory) {
+    public void addInventory(EmptyInventory inventory) {
         inventories.add(inventory);
     }
 

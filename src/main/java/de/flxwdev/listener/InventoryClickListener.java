@@ -14,20 +14,20 @@ public final class InventoryClickListener implements Listener {
             return;
         }
 
-        VulcanInventory.inventories()
+        VulcanInventory.getInventories()
                 .stream()
                 .filter(it -> {
-                    var result = event.getClickedInventory().equals(it.inventory());
+                    var result = event.getClickedInventory().equals(it.getInventory());
                     if(result) {
                         event.setCancelled(true);
                     }
                     return result;
                 }).findFirst().ifPresent(inventory -> {
-                    var item = inventory.itemMap().get(event.getSlot());
-                    if(!item.onClick().containsKey(event.getClick())) {
+                    var item = inventory.getItemMap().get(event.getSlot());
+                    if(!item.getOnClick().containsKey(event.getClick())) {
                         return;
                     }
-                    item.onClick().get(event.getClick()).run();
+                    item.getOnClick().get(event.getClick()).run();
                 });
     }
 }

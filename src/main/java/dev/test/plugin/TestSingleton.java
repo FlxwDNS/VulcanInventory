@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 @InventorySettings(placeholder = false)
 public final class TestSingleton extends SingletonInventory {
+    private final long openSince = System.currentTimeMillis();
+
     public TestSingleton(Player player) {
         super(player, Component.text("Test"));
 
@@ -32,12 +34,10 @@ public final class TestSingleton extends SingletonInventory {
         );
     }
 
-    private final long openSince = System.currentTimeMillis();
-
     @Override
     public void onUpdate(Map<Character, VulcanItem> items) {
         System.out.println("Updating inventory");
-        items.put('S', VulcanItem.skull(this.getPlayer().getUniqueId()).display(Component.text("Value: " + TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - openSince))).onClick(() -> {
+        items.put('S', VulcanItem.skull(this.getPlayer().getUniqueId()).display(Component.text("Click")).onClick(() -> {
             this.getPlayer().closeInventory();
         }));
     }

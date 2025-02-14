@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "de.flxwdev"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -20,5 +20,25 @@ dependencies {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+}
 
+publishing {
+    repositories {
+        maven {
+            name = "flxwdevRepository"
+            url = uri("https://repo.flxwdev.de/releases")
+            credentials(PasswordCredentials::class)
+            authentication {
+                create<BasicAuthentication>("basic")
+            }
+        }
+    }
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "dev.flxwdev"
+            artifactId = "vulcan-inventory"
+            version = this.version
+            from(components["java"])
+        }
+    }
 }

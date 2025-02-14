@@ -1,10 +1,9 @@
-package de.flxwdev.test;
+package dev.test.plugin;
 
 import de.flxwdev.inventory.InventorySettings;
 import de.flxwdev.inventory.singleton.SingletonInventory;
 import de.flxwdev.item.VulcanItem;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -31,7 +30,7 @@ public final class TestSingleton extends SingletonInventory {
     @Override
     public void onUpdate(Map<Character, VulcanItem> items) {
         System.out.println("Updating inventory");
-        items.put('S', VulcanItem.skull(Bukkit.getPlayer("Swerion").getUniqueId()).display(Component.text("Stone " + TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - openSince))).onClick(() -> {
+        items.put('S', VulcanItem.skull(this.getPlayer().getUniqueId()).display(Component.text("Stone " + TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - openSince))).onClick(() -> {
             this.getPlayer().closeInventory();
         }));
     }

@@ -1,4 +1,4 @@
-package de.flxwdev.test;
+package dev.test.plugin;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import de.flxwdev.VulcanInventory;

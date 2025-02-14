@@ -1,5 +1,5 @@
-name: Test
-main: de.flxwdev.test.TestPlugin
-version: 1.0
+name: TestPlugin
+main: dev.test.plugin.TestPlugin
+version: 1.0-DEV
 author: FlxwDNS
 api-version: "1.21"

@@ -1,6 +1,9 @@
+import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
+
 plugins {
     id("java")
     id("maven-publish")
+    id("dev.s7a.gradle.minecraft.server") version "3.2.1"
 }
 
 group = "de.flxwdev"
@@ -20,6 +23,21 @@ dependencies {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+}
+
+task<LaunchMinecraftServerTask>("launchMinecraftServer") {
+    dependsOn("jar")
+
+    doFirst {
+        copy {
+            println("${project.name}-${project.version}.jar")
+            from(buildDir.resolve("libs/${project.name}-${project.version}.jar"))
+            into(buildDir.resolve("MinecraftServer/plugins"))
+        }
+    }
+
+    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.21.4"))
+    agreeEula.set(true)
 }
 
 publishing {

@@ -10,10 +10,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-@InventorySettings(update = 20, placeholder = false)
+@InventorySettings(placeholder = false)
 public final class TestSingleton extends SingletonInventory {
     public TestSingleton(Player player) {
         super(player, Component.text("Test"));
+
+        this.addUpdateCondition((__) -> {
+            if(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - openSince) == 20) {
+                return false;
+            }
+            return true;
+        });
     }
 
     @Override
@@ -30,7 +37,7 @@ public final class TestSingleton extends SingletonInventory {
     @Override
     public void onUpdate(Map<Character, VulcanItem> items) {
         System.out.println("Updating inventory");
-        items.put('S', VulcanItem.skull(this.getPlayer().getUniqueId()).display(Component.text("Stone " + TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - openSince))).onClick(() -> {
+        items.put('S', VulcanItem.skull(this.getPlayer().getUniqueId()).display(Component.text("Value: " + TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - openSince))).onClick(() -> {
             this.getPlayer().closeInventory();
         }));
     }

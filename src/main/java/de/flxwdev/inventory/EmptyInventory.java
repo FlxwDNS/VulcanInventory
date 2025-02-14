@@ -2,6 +2,7 @@ package de.flxwdev.inventory;
 
 import de.flxwdev.VulcanInventory;
 import de.flxwdev.item.VulcanItem;
+import dev.test.plugin.TestPlugin;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -9,11 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 
 @Getter
 public abstract class EmptyInventory {
@@ -27,6 +26,8 @@ public abstract class EmptyInventory {
 
     private final List<Integer> scheduleIds = new ArrayList<>();
     private final Map<Integer, VulcanItem> itemMap = new HashMap<>();
+
+    private final Map<Integer, Function<Void, Object>> updateFunctions = new HashMap<>();
 
     public EmptyInventory(Player player, Component title) {
         this.settings = this.getClass().getAnnotation(InventorySettings.class);
@@ -46,7 +47,26 @@ public abstract class EmptyInventory {
         // Update the inventory every X ticks
         if(this.settings.update() >= 0) {
             this.scheduleIds.add(Bukkit.getScheduler().runTaskTimerAsynchronously(VulcanInventory.getPlugin(), this::update, 0, this.settings.update()).getTaskId());
+        } else {
+            Map<Integer, Object> tempValues = new HashMap<>();
+            this.scheduleIds.add(Bukkit.getScheduler().runTaskTimerAsynchronously(VulcanInventory.getPlugin(), () -> {
+                for (int i = 0; i < this.updateFunctions.size(); i++) {
+                    var value = this.updateFunctions.get(i).apply(null);
+                    if(value != null) {
+                        if(tempValues.size() > i) {
+                            if(tempValues.get(i) != value) {
+                                this.update();
+                            }
+                        }
+                        tempValues.put(i, value);
+                    }
+                }
+            }, 0, 5).getTaskId());
         }
+    }
+
+    public void addUpdateCondition(Function<Void, Object> function) {
+        this.updateFunctions.put(this.updateFunctions.size(), function);
     }
 
     public void destroy() {
